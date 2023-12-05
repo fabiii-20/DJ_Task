@@ -31,7 +31,7 @@ const App = () => {
   };
 
   return (
-    <div style={{fontFamily: 'Poppins' }}>
+    <div style={{backgroundColor: '#030303', color: '#FFFFFF', fontFamily: 'Poppins' }}>
       {!token ? (
         <Login handleLogin={handleLogin} />
       ) : (
