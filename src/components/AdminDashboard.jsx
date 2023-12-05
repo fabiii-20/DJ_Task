@@ -1,41 +1,34 @@
 /* eslint-disable no-unused-vars */
-// AdminDashboard.jsx
 
 import { useState, useEffect } from "react";
 import { getAdminDetails, updatePrice } from "../utils/api";
 import { Bar } from "react-chartjs-2";
+import GoogleFont from 'react-google-fonts';
+<GoogleFont family='Poppins' />
 
 // eslint-disable-next-line react/prop-types
 const AdminDashboard = ({ token }) => {
-  // eslint-disable-next-line no-unused-vars
 
-  const [data, setData] = useState(null);
   const [customSongAmount, setCustomSongAmount] = useState(0);
   const [regularSongAmounts, setRegularSongAmounts] = useState({
-    category_7: 80,
-    category_8: 60,
-    category_9: 40,
-    category_10: 20,
+    category_7: 0,
+    category_8: 0,
+    category_9: 0,
+    category_10: 0,
   });
   const [chargeCustomers, setChargeCustomers] = useState(false);
+  const [isSaveEnabled, setIsSaveEnabled] = useState(false);
   const graphData = {
-    labels: [
-      "Custom Amount",
-      "Category 7",
-      "Category 8",
-      "Category 9",
-      "Category 10",
-    ],
+    labels: ["Custom", "Category 1", "Category 2", "Category 3", "Category 4"],
     datasets: [
       {
         label: "Song Request Amounts",
         backgroundColor: "#F0C3F1",
-        borderColor: "#FFFFFF",
-        borderWidth: 1,
+        borderWidth: 0,
         hoverBackgroundColor: "#6741D9",
         hoverBorderColor: "#F0C3F1",
-        barThickness: 6,
-        
+        barThickness: 15,
+
         data: [
           customSongAmount,
           regularSongAmounts.category_7,
@@ -46,13 +39,42 @@ const AdminDashboard = ({ token }) => {
       },
     ],
   };
+  // const options = {  maintainAspectRatio: false,
+  //   scales: {
+  //     yAxes: [{
+  //       ticks: {
+  //         beginAtZero: true,
+  //         fontColor: '#000',
+  //       },
+  //       gridLines: {
+  //         color: '#000',
+  //       },
+  //     }],
+  //     xAxes: [{
+  //       ticks: {
+  //         fontColor: '#000',
+  //       },
+  //       gridLines: {
+  //         display: false,
+  //       },
+  //     }],
+  //   },};
 
+  useEffect(() => {
+     const isValuesValid = customSongAmount > 99 &&
+     regularSongAmounts.category_7 > 79 &&
+     regularSongAmounts.category_8 > 59 &&
+     regularSongAmounts.category_9 > 39 &&
+     regularSongAmounts.category_10 > 19;
+ console.log(isValuesValid,chargeCustomers)
+   setIsSaveEnabled(isValuesValid && chargeCustomers);
+ }, [customSongAmount, regularSongAmounts, chargeCustomers]);
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const adminId = 4; // Set the adminId here (or receive it as a prop)
+        const adminId = 4; 
         const response = await getAdminDetails(adminId);
-        setData(response.data);
         setChargeCustomers(response.data.charge_customers);
         setCustomSongAmount(response.data.amount.category_6);
         setRegularSongAmounts({
@@ -61,10 +83,11 @@ const AdminDashboard = ({ token }) => {
           category_9: response.data.amount.category_9,
           category_10: response.data.amount.category_10,
         });
-        // Update state with fetched data
+      
+        
       } catch (error) {
         console.error("Error fetching data", error);
-        // Handle error
+      
       }
     };
 
@@ -86,22 +109,22 @@ const AdminDashboard = ({ token }) => {
 
   const handleSave = async () => {
     try {
-      const adminId = 4; // Set the adminId here (or receive it as a prop)
+      const adminId = 4; 
       const updatedPrices = {
         category_6: customSongAmount,
         ...regularSongAmounts,
-      }; // Example updated prices
+      }; 
       const response = await updatePrice(adminId, updatedPrices);
       console.log("Prices updated:", response.data);
-      // Handle successful price update
+    
     } catch (error) {
       console.error("Error updating prices", error);
-      // Handle error
+      
     }
   };
 
   return (
-    <div className="admin-dashboard">
+    <div className="admin-dashboard" style={{  textAlign: 'center'}}>
       <h1>Admin Dashboard</h1>
       {/* Question 1 */}
       <div className="question">
@@ -125,7 +148,7 @@ const AdminDashboard = ({ token }) => {
       {chargeCustomers && (
         <div className="question">
           <p>Custom song request amount</p>
-          <input
+          <input style={{width:'50px'}}
             type="number"
             value={customSongAmount}
             min="99"
@@ -135,80 +158,74 @@ const AdminDashboard = ({ token }) => {
       )}
       {/* Question 3 */}
       {chargeCustomers && (
-        <div className="question">
+        <div className="question" >
           <p>Regular song request amounts, from high to low</p>
+          <div className="inputs" style={{display:'flex', flexDirection:'row', justifyContent:'space-around'}}>
           <input
+            style={{width:'50px'}}
             type="number"
             value={regularSongAmounts.category_7}
             min="79"
             onChange={(e) => handleRegularSongAmountChange(e, "category_7")}
           />
-          <input
+          <input style={{width:'50px'}}
             type="number"
             value={regularSongAmounts.category_8}
             min="59"
             onChange={(e) => handleRegularSongAmountChange(e, "category_8")}
           />
-          <input
+         
+          <input style={{width:'50px'}}
             type="number"
             value={regularSongAmounts.category_9}
             min="39"
             onChange={(e) => handleRegularSongAmountChange(e, "category_9")}
           />
-          <input
+          <input style={{width:'50px'}}
             type="number"
             value={regularSongAmounts.category_10}
             min="19"
             onChange={(e) => handleRegularSongAmountChange(e, "category_10")}
           />
+          </div>
         </div>
       )}
       {/* Graph */}
-      {/* Render the graph based on customSongAmount and regularSongAmounts */}
       {chargeCustomers && (
-        <div className="graph-container">
+        <div className="graph-container" style={{width:'600px', display:'flex',flexDirection:'column', alignContent:'center'}}>
           <h2>Graph</h2>
-          <div className="graph">
+          <div >
             <Bar
               data={graphData}
-              options={{
-                maintainAspectRatio: false,
-                scales: {
-                  // yAxes: [{
-                  //   ticks: {
-                  //     beginAtZero: true,
-                  //     fontColor: '#FFFFFF', // Change as per style requirements
-                  //   },
-                  //   gridLines: {
-                  //     color: '#FFFFFF', // Change as per style requirements
-                  //   },
-                  // }],
-                  // xAxes: [{
-                  //   ticks: {
-                  //     fontColor: '#FFFFFF', // Change as per style requirements
-                  //   },
-                  //   gridLines: {
-                  //     display: false,
-                  //   },
-                  // }],
-                  y: {
-                    min: -15,
-                    max: 15,
-                    stepSize: 5,
-                    ticks:{
-                      color: '#FFFFFF'
-                    }
-                  },
-                  x: {},
+              options={{maintainAspectRatio: false,
+              scales:{
+                y: {
+                  ticks: { color: '#ffffff', beginAtZero: true }
                 },
-              }}
+                x: {
+                  ticks: { color: '#ffffff', beginAtZero: true }
+                }
+              }}}
+            
             />
           </div>
         </div>
       )}
-      <button onClick={handleSave} disabled={!chargeCustomers}>
+      <div style={{padding:'16px'}}>
+      <button style={{
+          width: '600px',
+          maxWidth: '300px',
+          fontSize: '16px',
+          backgroundColor: isSaveEnabled ? '#6741D9' : '#C2C2C2',
+          borderColor: isSaveEnabled ? '#F0C3F1' : '#C2C2C2',
+          cursor: isSaveEnabled ? 'pointer' : 'not-allowed',
+          margin: '0 auto',
+        }}
+        onClick={handleSave}
+        disabled={!isSaveEnabled && !chargeCustomers} >
         Save
       </button>
+      </div>
     </div>
   );
 };
