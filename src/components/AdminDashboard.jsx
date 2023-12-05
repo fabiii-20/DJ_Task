@@ -122,6 +122,12 @@ const AdminDashboard = ({ token }) => {
       
     }
   };
+  function borderOne(e) {
+    e.target.style.borderWidth = '1px';
+  }
+  function borderZero(e) {
+    e.target.style.borderWidth = '0px';
+  }
 
   return (
     <div className="admin-dashboard" style={{  textAlign: 'center'}}>
@@ -216,11 +222,17 @@ const AdminDashboard = ({ token }) => {
           width: '600px',
           maxWidth: '300px',
           fontSize: '16px',
+          borderRadius:'8px',
+          padding:'0.4em',
+          fontWeight:'bold',
+          color: isSaveEnabled ? '#FFFFFF' : '#414A4C',
+          borderWidth:"0px",
           backgroundColor: isSaveEnabled ? '#6741D9' : '#C2C2C2',
           borderColor: isSaveEnabled ? '#F0C3F1' : '#C2C2C2',
           cursor: isSaveEnabled ? 'pointer' : 'not-allowed',
-          margin: '0 auto',
         }}
+        onMouseEnter={borderOne}
+        onMouseLeave={borderZero}
         onClick={handleSave}
         disabled={!isSaveEnabled && !chargeCustomers} >
         Save

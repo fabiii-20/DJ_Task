@@ -24,6 +24,7 @@ const Login = ({ handleLogin }) => {
       }
     }
   };
+  
 
   return (
     <div style={{ textAlign: 'center' }}>
@@ -37,16 +38,21 @@ const Login = ({ handleLogin }) => {
           <label style={{padding:'12px'}}htmlFor="password">Password</label>
           <input type="password" id="password"style={{borderRadius: '4px'}} value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
+        <div style={{padding:'16px'}}>
         <button type="submit" 
         style={{ 
           width: '600px',
           maxWidth: '300px',
-          fontSize: '16px', 
-          background: '#6741D9', 
-          color: '#FFFFFF', 
-          marginTop: '10px',
-          margin: '0 auto',
-        }}>Sign In</button>
+          fontSize: '16px',
+          borderRadius:'8px',
+          padding:'0.4em',
+          fontWeight:'bold',
+          color: '#FFFFFF',
+          borderWidth:"1px",
+          backgroundColor:'#6741D9',
+          borderColor: '#F0C3F1',
+          cursor: 'pointer' ,
+        }}>Sign In</button></div>
       </form>
     </div>
   );
